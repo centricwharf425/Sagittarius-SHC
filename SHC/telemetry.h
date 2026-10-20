@@ -31,8 +31,12 @@ struct Telemetry {
   // u-blox GNSS — position (double: float only holds ~7 digits)
   double latitude;
   double longitude;
-  float altitude_m;
+  float altitude_m;       // Above sea level
+  float altitude_agl_m;   // Above the launch site
+  bool gps_fix;           // True only with a live 3D fix
 
   // Geiger counter — counts per minute
   unsigned long cpm;
+
+  unsigned int burst_count;
 };

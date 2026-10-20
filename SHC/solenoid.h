@@ -4,3 +4,5 @@ void solenoid_begin();
 
 void solenoid_left_burst();
 void solenoid_right_burst();
+void solenoid_update();
+unsigned int solenoid_burst_count();

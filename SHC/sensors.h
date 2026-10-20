@@ -5,5 +5,6 @@
 // ============================================================
 #include "telemetry.h"
 
-void sensors_begin();                  // Halts if any sensor is missing
+void sensors_begin();  // Missing sensors are reported; their fields read NAN
 void sensors_read(Telemetry &t);
+void sensors_read_gyro(Telemetry &t);
