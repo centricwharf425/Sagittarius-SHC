@@ -1,0 +1,18 @@
+default_fqbn: teensy:avr:teensy40
+default_port: usb1/1-1
+default_profile: teensy40
+
+profiles:
+  teensy40:
+    fqbn: teensy:avr:teensy40
+    port: usb1/1-1
+    platforms:
+      - platform: teensy:avr (1.62.0)
+        platform_index_url: https://www.pjrc.com/teensy/package_teensy_index.json
+    libraries:
+      - Adafruit BNO055 (1.6.4)
+      - Adafruit Unified Sensor (1.1.15)
+      - Adafruit BusIO (1.17.4)
+      - Adafruit INA260 Library (1.5.3)
+      - Adafruit BME280 Library (2.3.0)
+      - SparkFun u-blox GNSS Arduino Library (2.2.29)
