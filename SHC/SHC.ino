@@ -1,7 +1,7 @@
 // ============================================================
 //  Sagittarius SHC — Teensy 4.0 telemetry logger
 //
-//  Each loop: read sensors -> wait for GPS -> log to SD + serial
+//  Each loop: read sensors -> wait for GPS -> log to SD + serial -> Stabiliation Loop (if outside jetstream)
 //
 //  config.h     pins, ports, timing
 //  telemetry.h  the data record that gets logged
@@ -9,6 +9,8 @@
 //  gps.*        u-blox GNSS + clock sync
 //  geiger.*     Geiger counter CPM
 //  logger.*     OpenLog CSV + serial monitor table
+//  solenoid.*   Solenoid
+//  led.*        LED
 // ============================================================
 #include <Wire.h>
 #include "config.h"
@@ -35,35 +37,39 @@ void setup() {
   sensors_begin();
   gps_begin();
   geiger_begin();
+  solenoid_begin();
+  led_begin();
   Serial.println("All sensors initialized.");
 
   Serial.println("Setup completed successfully. Waiting for GPS PVT packets...");
 }
 
-void loop() {
-  sensors_read(data);
-  data.cpm = geiger_cpm();
 
-  if (gps_read(data)) {
-    print_to_serial(data);
-    log_to_sd(data);
-  } else {
-    Serial.println("Get PVT False...");
-  }
+static void stabilize() {
+  // Only with a live 3D fix: a stale altitude from a lost fix is not trusted
+  if (!data.gps_fix || data.altitude_agl_m < EXIT_ALTITUDE) return;
 
-  led_flash();
-
-  if (data.altitude_m >= EXIT_ALTITUDE) {
-    // Begin Stabilization
-    if (not(data.z_gyro <= STABLE_ZONE_RANGE)) {
-      // Stabilize
-      if (data.z_gyro < 0) {  // If negative then burst in the left direction
-        solenoid_left_burst();
-      }
-
-      if (data.z_gyro > 0) {  // If positive then burst in the left direction
-        solenoid_right_burst();
-      }
+  sensors_read_gyro(data);
+  if (fabs(data.z_gyro) > STABLE_ZONE_RANGE) {
+    if (data.z_gyro < 0) {
+      solenoid_left_burst();
+    } else {
+      solenoid_right_burst();
     }
   }
+}
+
+void loop() {
+  if (gps_read(data)) {
+    sensors_read(data);
+    data.cpm = geiger_cpm();
+    data.burst_count = solenoid_burst_count();
+    print_to_serial(data);
+    log_to_sd(data);
+    led_flash();
+  }
+
+  stabilize();
+  solenoid_update();
+  led_update();
 }
