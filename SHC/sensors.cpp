@@ -48,6 +48,7 @@ void sensors_read_gyro(Telemetry &t) {
 
 void sensors_read(Telemetry &t) {
   if (bnoOk) {
+    //Review: I have never seen this event code before, but i dont see any problems with it
     sensors_event_t event;
     bno.getEvent(&event);
     t.x_orient = event.orientation.x;

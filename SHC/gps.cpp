@@ -48,7 +48,7 @@ void gps_begin() {
   gnss.setAutoPVT(true);
   setSyncProvider(getTeensy3Time);
   Serial.println("M9N found!");
-  //you need a return here
+  //Review: you need a return here
   return;
 }
 
@@ -57,6 +57,8 @@ bool gps_read(Telemetry &t) {
     // No GNSS: still return true every LOG_FALLBACK_MS so the other sensors keep logging
     if (millis() - lastFallback < LOG_FALLBACK_MS) return false;
     lastFallback = millis();
+    //Review: attempt to reinitalize GPS if it is not working
+    gpsOk = gnss.begin();
     t.gps_fix = false;
     return true;
   }

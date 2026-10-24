@@ -48,8 +48,10 @@ void setup() {
 
 static void stabilize() {
   // Only with a live 3D fix: a stale altitude from a lost fix is not trusted
+  //FRR TESTING: You need to comment this line out for testing, so it will stabilize on the ground for testing
   if (!data.gps_fix || data.altitude_agl_m < EXIT_ALTITUDE) return;
 
+  //Review: ideally solenoids are lebaled clock-wise and counter clock-wise
   sensors_read_gyro(data);
   if (fabs(data.z_gyro) > STABLE_ZONE_RANGE) {
     if (data.z_gyro < 0) {
@@ -61,14 +63,14 @@ static void stabilize() {
 }
 
 void loop() {
-  if (gps_read(data)) {
-    sensors_read(data);
-    data.cpm = geiger_cpm();
-    data.burst_count = solenoid_burst_count();
-    print_to_serial(data);
-    log_to_sd(data);
-    led_flash();
-  }
+  gps_read(data);
+  sensors_read(data);
+  data.cpm = geiger_cpm();
+  data.burst_count = solenoid_burst_count();
+  print_to_serial(data);
+  log_to_sd(data);
+  led_flash();
+  
 
   stabilize();
   solenoid_update();

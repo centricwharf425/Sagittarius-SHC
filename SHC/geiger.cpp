@@ -11,6 +11,7 @@ static void onPulse() {
 }
 
 void geiger_begin() {
+  //Review: is the geiger counter an input only, or do you need to send info to it to initialize it?
   pinMode(GEIGER_PIN, INPUT);
   attachInterrupt(digitalPinToInterrupt(GEIGER_PIN), onPulse, FALLING);
 }

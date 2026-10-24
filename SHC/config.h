@@ -20,7 +20,7 @@
 #define LOG_FALLBACK_MS 1000  // Log interval if the GNSS is missing at boot
 
 // ---- JET STREAM ----
-#define EXIT_ALTITUDE 100  // Meters above the launch site (first 3D fix) before stabilizing
+#define EXIT_ALTITUDE 20000  // Meters above the launch site (first 3D fix) before stabilizing
 
 
 // ---- LEDS ----
@@ -32,7 +32,10 @@
 #define SOLENOID_RIGHT_PIN 4
 
 // ---- STABILIZATION ---
-#define STABLE_ZONE_RANGE 1     // Range of ± 1 rad/s
-#define BURST_DELAY 500         // Burst of 500 miliseconds
-#define BURST_COOLDOWN_MS 1500  // Wait after a burst before deciding again
+//Review: the mission requriement is 15 rad/s, keeping it at 1 rad/s will make it oscilate
+#define STABLE_ZONE_RANGE 10     // Range of ± 1 rad/s
+//Review: 500 miliseconds is too long, you will oscolate and run out all the gas
+#define BURST_DELAY 100         // Burst of 500 miliseconds
+//Review: 1.5 seconds is too long, you will not update fast enough to stabilize
+#define BURST_COOLDOWN_MS 500  // Wait after a burst before deciding again
 #define MAX_BURST 200           // Gas Burst
