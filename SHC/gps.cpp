@@ -34,6 +34,12 @@ static void syncClock() {
 }
 
 void gps_begin() {
+  //Review: you need to attmept this multiple times bc it may take a few attemtps to get good data
+  for(int i = 0; i <= 20 || !gnss.begin; i++)
+  {
+    delay(50);
+    Serial.println("M9N not found");
+  }
   if (!gnss.begin()) {
     Serial.println("No u-blox GNSS detected... logging without GPS");
     return;
@@ -41,6 +47,9 @@ void gps_begin() {
   gpsOk = true;
   gnss.setAutoPVT(true);
   setSyncProvider(getTeensy3Time);
+  Serial.println("M9N found!");
+  //you need a return here
+  return;
 }
 
 bool gps_read(Telemetry &t) {

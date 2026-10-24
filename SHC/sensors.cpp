@@ -15,12 +15,21 @@ static bool bmeOk = false;
 static bool inaOk = false;
 
 void sensors_begin() {
-  bnoOk = bno.begin();
+  //Review: you might have to stop BME and BNO to get good data, the timing is really funky and idk why
+  //Review: you need to attempt to initalize these multiple times, it will likeley fail the first time (especailly the M9N)
+  for(int i = 0; i <= 20 || !bnoOK; i++){
+    bnoOk = bno.begin();
+  }
   if (!bnoOk) Serial.println("No BNO055 detected... continuing without it");
-  bmeOk = bme.begin();
+  for(int i = 0; i <= 20 || !bmeOK; i++){
+    bmeOk = bme.begin();
+  }
   if (!bmeOk) Serial.println("No BME280 detected... continuing without it");
-  inaOk = ina260.begin();
-  if (!inaOk) Serial.println("No INA260 detected... continuing without it");
+  //Review: INA is not longer part of mission requirements becuase it broke everything
+  // for(int i = 0; i <= 20 || !inaOK; i++){
+  //   inaOk = ina260.begin();
+  // }
+  // if (!inaOk) Serial.println("No INA260 detected... continuing without it");
 }
 
 void sensors_read_gyro(Telemetry &t) {

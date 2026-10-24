@@ -32,6 +32,7 @@ void setup() {
   logger_begin();
 
   Wire.begin();
+  //Review: you don't need to set an i2c clock hz it does that automatically
   Wire.setClock(I2C_CLOCK_HZ);
 
   sensors_begin();

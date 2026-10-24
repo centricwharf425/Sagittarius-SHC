@@ -21,6 +21,7 @@ static bool headerWritten = false;
 
 void logger_begin() {
   OPENLOG_SERIAL.begin(OPENLOG_BAUD);
+  //Review: should not need this, it automatically is configured for writing to the serial
   OPENLOG_SERIAL.addMemoryForWrite(openlogTxBuffer, sizeof(openlogTxBuffer));
 }
 
